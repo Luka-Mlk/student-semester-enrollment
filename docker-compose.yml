@@ -1,0 +1,55 @@
+services:
+  student-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: student-app
+    depends_on:
+      - postgres-db
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8094
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/student_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: broker:29092
+      SPRING_CLOUD_CONSUL_HOST: lecture_planning-consul
+      SPRING_CLOUD_CONSUL_PORT: 8500
+      SPRING_CLOUD_CONSUL_CONFIG_ENABLED: "false"
+      SPRING_CLOUD_CONSUL_CONFIG_IMPORT_CHECK_ENABLED: "false"
+      SPRING_CLOUD_CONSUL_DISCOVERY_ENABLED: "true"
+      SPRING_CLOUD_CONSUL_DISCOVERY_REGISTER: "true"
+      SPRING_CLOUD_CONSUL_DISCOVERY_SERVICE_NAME: student-semester-enrollment
+      SPRING_CLOUD_CONSUL_DISCOVERY_HEALTH_CHECK_PATH: /actuator/health
+      SPRING_CLOUD_CONSUL_DISCOVERY_HEALTH_CHECK_URL: http://student-app:8094/actuator/health
+      SPRING_CLOUD_CONSUL_DISCOVERY_HEALTH_CHECK_INTERVAL: 10s
+      SPRING_CLOUD_CONSUL_DISCOVERY_PREFER_IP_ADDRESS: "false"
+      SPRING_CLOUD_CONSUL_DISCOVERY_HOSTNAME: student-app
+      MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE: health,info
+      MANAGEMENT_ENDPOINT_HEALTH_SHOW_DETAILS: always
+    ports:
+      - "8094:8094"
+    networks:
+      - shared_net
+
+  postgres-db:
+    image: postgres:15
+    container_name: student_semester_enrollment_db
+    environment:
+      POSTGRES_DB: student_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - student-db-data:/var/lib/postgresql/data
+    ports:
+      - "5445:5432"
+    networks:
+      - shared_net
+
+volumes:
+  student-db-data:
+
+networks:
+  shared_net:
+    name: shared_net
+    external: true

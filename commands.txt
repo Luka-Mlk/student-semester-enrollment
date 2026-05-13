@@ -1,0 +1,12 @@
+MSYS_NO_PATHCONV=1 docker exec -it broker /opt/kafka/bin/kafka-console-producer.sh   --bootstrap-server localhost:9092   --topic subject.created
+
+{"subjectId":{"value":"sub-1"},"subjectName":"Databases","ects":6,"isMandatory":true}
+
+{"subjectId":{"value":"sub-2"},"subjectName":"Algorithms","ects":6,"isMandatory":true}
+
+
+MSYS_NO_PATHCONV=1 docker exec -it broker /opt/kafka/bin/kafka-console-producer.sh \
+  --bootstrap-server localhost:9092 \
+  --topic student.graduate.command
+
+{"recordId":"783f41ef-0cf8-4fb4-84b6-c4a5d2220f5c"}
