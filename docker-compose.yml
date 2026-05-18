@@ -5,14 +5,14 @@ services:
       dockerfile: Dockerfile
     container_name: student-app
     depends_on:
-      - postgres-db
+      - student-postgres-db
     environment:
       SPRING_PROFILES_ACTIVE: docker
       SERVER_PORT: 8094
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/student_db
+      SPRING_DATASOURCE_URL: jdbc:postgresql://student-postgres-db:5432/student_db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: admin
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: broker:29092
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: lecture-planning-broker-1:29092
       SPRING_CLOUD_CONSUL_HOST: lecture_planning-consul
       SPRING_CLOUD_CONSUL_PORT: 8500
       SPRING_CLOUD_CONSUL_CONFIG_ENABLED: "false"
@@ -32,7 +32,7 @@ services:
     networks:
       - shared_net
 
-  postgres-db:
+  student-postgres-db:
     image: postgres:15
     container_name: student_semester_enrollment_db
     environment:
